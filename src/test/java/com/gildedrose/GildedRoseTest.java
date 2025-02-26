@@ -10,6 +10,7 @@ private static final String AGED_BRIE = "Aged Brie";
 private static final String BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert";
 private static final String SULFURAS = "Sulfuras, Hand of Ragnaros";
 private static final String NORMAL_ITEM = "Normal item";
+private static final String Conjured = "Conjured Mana Cake";
 
 ////////////////////////////////////Aged_Brie/////////////////////////////////////////////
     @Test
@@ -76,20 +77,22 @@ private static final String NORMAL_ITEM = "Normal item";
 
     @Test
     void assertThatBackstageIncreasingTwiceInQualityWhenSellInEqual6AndSellInDecreasesByOne() {
-        Item[] items = new Item[] { new Item(BACKSTAGE_PASSES, 6, 0)};
+        Item[] items = new Item[] { new Item(BACKSTAGE_PASSES, 6, 49),new Item(BACKSTAGE_PASSES, 6, 4)};
         GildedRose app = new GildedRose(items);
         app.updateQuality();
         assertEquals(5, app.items[0].sellIn);
-        assertEquals(2, app.items[0].quality);
+        assertEquals(50, app.items[0].quality);
+        assertEquals(5, app.items[1].sellIn);
+        assertEquals(6, app.items[1].quality);
     }
 
     @Test
     void assertThatBackstageIncreasingThreeTimesInQualityWhenSellInLessThan6AndSellInDecreasesByOne() {
-        Item[] items = new Item[] { new Item(BACKSTAGE_PASSES, 5, 0)};
+        Item[] items = new Item[] { new Item(BACKSTAGE_PASSES, 5, 48)};
         GildedRose app = new GildedRose(items);
         app.updateQuality();
         assertEquals(4, app.items[0].sellIn);
-        assertEquals(3, app.items[0].quality);
+        assertEquals(50, app.items[0].quality);
     }
 
     @Test
@@ -108,11 +111,11 @@ private static final String NORMAL_ITEM = "Normal item";
         GildedRose app = new GildedRose(items);
         app.updateQuality();
         assertEquals(0, app.items[0].sellIn);
-        assertEquals(0, app.items[0].quality);
+        assertEquals(80, app.items[0].quality);
         assertEquals(0, app.items[1].sellIn);
-        assertEquals(50, app.items[1].quality);
+        assertEquals(80, app.items[1].quality);
         assertEquals(20, app.items[2].sellIn);
-        assertEquals(30, app.items[2].quality);
+        assertEquals(80, app.items[2].quality);
     }
 
 ////////////////////////////////////Normal_item/////////////////////////////////////////////
@@ -153,6 +156,42 @@ private static final String NORMAL_ITEM = "Normal item";
         assertEquals(2, app.items[1].sellIn);
     }
 
+////////////////////////////////////Conjured Mana Cake/////////////////////////////////////////////
+@Test
+void assertThatConjuredItemQualityNeverNegative() {
+    Item[] items = new Item[] { new Item(Conjured, 10, 0) };
+    GildedRose app = new GildedRose(items);
+    app.updateQuality();
+    assertEquals(0, app.items[0].quality);
+}
 
+@Test
+void assertThatConjuredItemQualityAlwaysDecreaseTwiceIfSellInGreaterThanZero() {
+    Item[] items = new Item[] { new Item(Conjured, 1, 50), new Item(Conjured, 2, 1), new Item(Conjured, 3, 2), new Item(Conjured, 3, 7)};
+    GildedRose app = new GildedRose(items);
+    app.updateQuality();
+    assertEquals(48, app.items[0].quality);
+    assertEquals(0, app.items[1].quality);
+    assertEquals(0, app.items[2].quality);
+    assertEquals(5, app.items[3].quality);
+}
+
+@Test
+void assertThatConjuredItemQualityAlwaysDecrease4TimesIfSellInEqualZero() {
+    Item[] items = new Item[] { new Item(Conjured, 0, 50), new Item(Conjured, 0, 5)};
+    GildedRose app = new GildedRose(items);
+    app.updateQuality();
+    assertEquals(46, app.items[0].quality);
+    assertEquals(1, app.items[1].quality);
+}
+
+@Test
+void assertThatConjuredItemSellInAlwaysDecreaseByOne() {
+    Item[] items = new Item[] { new Item(Conjured, 0, 50), new Item(Conjured, 3, 5)};
+    GildedRose app = new GildedRose(items);
+    app.updateQuality();
+    assertEquals(-1, app.items[0].sellIn);
+    assertEquals(2, app.items[1].sellIn);
+}
 
 }
