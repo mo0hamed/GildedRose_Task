@@ -1,9 +1,9 @@
 package com.gildedrose;
 
-import com.gildedrose.strategy.Aged_brie;
+import com.gildedrose.strategy.AgedBrie;
 import com.gildedrose.strategy.Backstage;
 import com.gildedrose.strategy.Conjured;
-import com.gildedrose.strategy.Normal_Item;
+import com.gildedrose.strategy.NormalItem;
 import com.gildedrose.strategy.Sulfuras;
 import com.gildedrose.strategy.UpdateItem;
 
@@ -17,7 +17,7 @@ class GildedRose {
     private UpdateItem getUpdateItem(Item item) {
         switch (item.name) {
             case "Aged Brie":
-                return new Aged_brie();
+                return new AgedBrie();
             case "Backstage passes to a TAFKAL80ETC concert":
                 return new Backstage();
             case "Sulfuras, Hand of Ragnaros":
@@ -25,7 +25,7 @@ class GildedRose {
             case "Conjured Mana Cake":
                 return new Conjured();
             default:
-                return new Normal_Item();
+                return new NormalItem();
         }
     }
 
